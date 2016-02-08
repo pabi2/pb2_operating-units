@@ -104,14 +104,12 @@ class AccountVoucher(models.Model):
             # was not having debit = credit = 0 (which is a legal value)
             if (
                 not line.amount and
-                not (
-                     line.move_line_id and
+                not (line.move_line_id and
                      not float_compare(line.move_line_id.debit,
                                        line.move_line_id.credit,
                                        precision_digits=prec) and
                      not float_compare(line.move_line_id.debit, 0.0,
-                                       precision_digits=prec)
-                )
+                                       precision_digits=prec))
             ):
                 continue
             # convert the amount set on the voucher line into the

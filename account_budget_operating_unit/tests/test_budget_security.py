@@ -41,4 +41,3 @@ class TestBudgetSecurity(test_budget_ou.TestBudgetOperatingUnit):
                      [self.ou1.id])]).ids
         self.assertEqual(budget_line_ids, [], 'User 2 should not be able to '
                          'list the locations assigned to Main OU.')
-
