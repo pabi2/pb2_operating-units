@@ -50,20 +50,3 @@ class CrossoveredBudgetLines(models.Model):
         related='crossovered_budget_id.operating_unit_id',
         string='Operating Unit', readonly=True, store=True,
     )
-
-    # DONE but NOT USED YET
-#     @api.one
-#     @api.constrains('operating_unit_id', 'analytic_account_id')
-#     def _check_analytic_account_operating_unit(self):
-#         if self.type not in ('payment', 'receipt'):
-#             return True
-#         if (
-#             self.analytic_account_id and self.operating_unit_id and
-#             self.analytic_account_id.operating_unit_id and
-#             self.analytic_account_id.operating_unit_idid !=
-#                 self.operating_unit_id.id
-#         ):
-#             raise Warning(_('The Analytic Account must have the same '
-#                             'Operating Unit as the one indicated in the '
-#                             'budget plan'))
-#         return True

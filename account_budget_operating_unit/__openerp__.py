@@ -20,23 +20,22 @@
 ##############################################################################
 
 {
-    'name': 'Vouchers with Operating Units',
+    'name': 'Budget with Operating Units',
     'version': '1.0',
-    'category': 'Generic Modules/Sales & Purchases',
+    'category': 'Accounting & Finance',
     'description': '''
-TODO:
-Budgets with Operating Units
-=============================
+
+Budget with Operating Units
+===========================
 This module introduces the following features:
-- Adds the OU as a required field in the payment vouchers
-- The voucher can only select AR o AP items for payment that belong to the
-same OU
+- Adds the OU as a required field in the budget plan / budget line
 - Security rules are defined to ensure that users can only display the
-Vouchers in which they are allowed access to.
+budget in which they are allowed access to.
+
 ''',
     'author': "Eficent",
     'website': 'http://www.eficent.com',
-    'depends': ['account_operating_unit', 'operating_unit'],
+    'depends': ['account_budget', 'operating_unit'],
     'data': [
         'views/account_budget_view.xml',
         'security/account_budget_security.xml'
