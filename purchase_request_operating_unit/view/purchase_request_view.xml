@@ -19,8 +19,7 @@
             <field name="inherit_id" ref="purchase_request.view_purchase_request_form" />
             <field name="arch" type="xml">
                 <field name="company_id" position="after">
-                  <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
-                     on_change="onchange_operating_unit_id(operating_unit_id)"/>
+                  <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit" />
                 </field>
                 <xpath expr="//field[@name='line_ids']" position="attributes">
                     <attribute name="context">{'operating_unit_id': operating_unit_id}</attribute>

@@ -18,71 +18,48 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import fields, orm
-from openerp.tools.translate import _
+from openerp import fields, models, api
 
 
-class PurchaseRequest(orm.Model):
-
+class PurchaseRequest(models.Model):
     _inherit = 'purchase.request'
 
-    _columns = {
-        'operating_unit_id': fields.many2one('operating.unit',
-                                             'Operating Unit'),
-    }
+    operating_unit_id = fields.Many2one(
+        'operating.unit',
+        string='Operating Unit',
+        default=lambda self:
+        self.env['res.users'].
+        operating_unit_default_get(self._uid),
+    )
 
-    _defaults = {
-        'operating_unit_id': lambda self, cr, uid, c: self.pool.get(
-            'res.users').operating_unit_default_get(cr, uid, uid, context=c),
-    }
+    @api.one
+    @api.constrains('operating_unit_id', 'company_id')
+    def _check_company_operating_unit(self):
+        if self.company_id and self.operating_unit_id and \
+                self.company_id != self.operating_unit_id.company_id:
+            raise Warning(_('The Company in the Purchase Request and in '
+                            'the Operating Unit must be the same.'))
 
-    def onchange_operating_unit_id(self, cr, uid, ids, operating_unit_id,
-                                   context=None):
-        # Obtain the default warehouse for the new operating unit
-        if context is None:
-            context = {}
-        res = {'value': {}}
-        warehouse_obj = self.pool['stock.warehouse']
-
-        if operating_unit_id:
-            warehouse_ids = warehouse_obj.search(cr, uid,
-                                                 [('operating_unit_id', '=',
-                                                   operating_unit_id)],
-                                                 limit=1, context=context)
-            if warehouse_ids:
-                res['value']['warehouse_id'] = warehouse_ids[0]
-        return res
-
-    def _check_company_operating_unit(self, cr, uid, ids, context=None):
-        for pr in self.browse(cr, uid, ids, context=context):
-            if pr.company_id and pr.operating_unit_id and\
-                    pr.company_id != pr.operating_unit_id.company_id:
-                return False
-        return True
-
-    _constraints = [
-        (_check_company_operating_unit,
-         'The Company in the Purchase Request and in the Operating '
-         'Unit must be the same.', ['operating_unit_id',
-                                    'company_id'])]
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit_id(self):
+        Warehouse = self.env['stock.warehouse']
+        if self.operating_unit_id:
+            whs = Warehouse.search([('operating_unit_id', '=',
+                                     self.operating_unit_id.id)])
+            if whs:
+                self.warehouse_id = whs[0].id
+            else:
+                raise Warning(_("No Warehouse found with the "
+                                "Operating Unit indicated in the "
+                                "Purchase Request!"))
 
 
-class PurchaseRequestLine(orm.Model):
+class PurchaseRequestLine(models.Model):
     _inherit = 'purchase.request.line'
 
-    def _get_lines_from_request(self, cr, uid, ids, context=None):
-        lines = []
-        for request in self.pool['purchase.request'].browse(
-                cr, uid, ids, context=context):
-            for line in request.line_ids:
-                lines.append(line.id)
-        return list(set(lines))
-
-    _columns = {
-        'operating_unit_id': fields.related(
-            'request_id', 'operating_unit_id', type='many2one',
-            relation='operating.unit', string='Operating Unit',
-            readonly=True,
-            store={'purchase.request': (_get_lines_from_request,
-                                        None, 20)})
-    }
+    operating_unit_id = fields.Many2one(
+        'operating.unit',
+        related='request_id.operating_unit_id',
+        string='Operating Unit', readonly=True,
+        store=True,
+    )

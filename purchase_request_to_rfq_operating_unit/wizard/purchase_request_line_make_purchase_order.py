@@ -18,32 +18,32 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.tools.translate import _
-from openerp.osv import fields, orm
+from openerp import fields, models, api, _
+from openerp.exceptions import except_orm
 
 
-class PurchaseRequestLineMakePurchaseOrder(orm.TransientModel):
+class PurchaseRequestLineMakePurchaseOrder(models.TransientModel):
     _inherit = "purchase.request.line.make.purchase.order"
 
-    _columns = {
-        'operating_unit_id': fields.many2one('operating.unit',
-                                             'Operating Unit',
-                                             readonly=True),
-    }
+    operating_unit_id = fields.Many2one(
+        'operating.unit',
+        string='Operating Unit',
+        readonly=True,
+    )
 
-    def default_get(self, cr, uid, fields, context=None):
-        res = super(PurchaseRequestLineMakePurchaseOrder, self).default_get(
-            cr, uid, fields, context=context)
-        request_line_obj = self.pool['purchase.request.line']
-        request_line_ids = context.get('active_ids', [])
+    @api.model
+    def default_get(self, fields):
+        res = super(PurchaseRequestLineMakePurchaseOrder, self).\
+            default_get(fields)
+        request_line_obj = self.env['purchase.request.line']
+        request_line_ids = self._context.get('active_ids', [])
         operating_unit_id = False
-        for line in request_line_obj.browse(cr, uid, request_line_ids,
-                                            context=context):
+        for line in request_line_obj.browse(request_line_ids):
             line_operating_unit_id = line.request_id.operating_unit_id \
                 and line.request_id.operating_unit_id.id or False
             if operating_unit_id is not False \
                     and line_operating_unit_id != operating_unit_id:
-                raise orm.except_orm(
+                raise except_orm(
                     _('Could not process !'),
                     _('You have to select lines '
                       'from the same operating unit.'))
@@ -53,15 +53,12 @@ class PurchaseRequestLineMakePurchaseOrder(orm.TransientModel):
 
         return res
 
-    def _prepare_purchase_order(self, cr, uid, make_purchase_order,
-                                warehouse_id, company_id,
-                                context=None):
-        data = super(PurchaseRequestLineMakePurchaseOrder,
-                     self)._prepare_purchase_order(
-            cr, uid, make_purchase_order, warehouse_id, company_id,
-            context=context)
+    @api.model
+    def _prepare_purchase_order(self, warehouse_id, company_id):
+        data = super(PurchaseRequestLineMakePurchaseOrder, self).\
+            _prepare_purchase_order(warehouse_id, company_id)
         data['requesting_operating_unit_id'] = \
-            make_purchase_order.operating_unit_id.id
+            self.operating_unit_id.id
         data['operating_unit_id'] = \
-            make_purchase_order.operating_unit_id.id
+            self.operating_unit_id.id
         return data

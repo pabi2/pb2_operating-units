@@ -18,15 +18,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import orm
+from openerp import models, api
 
 
-class Procurement(orm.Model):
+class Procurement(models.Model):
     _inherit = 'procurement.order'
 
-    def _prepare_purchase_request(self, cr, uid, procurement, context=None):
-        res = super(Procurement, self)._prepare_purchase_request(
-                cr, uid, procurement, context=context)
+    # TODO:
+    # create_procurement_purchase_order, still not pass the correct OU
+    # still allow Warehouse and Location from different OU.
+    # Why no operating_unit_id fields
+
+    @api.model
+    def _prepare_purchase_request(self, procurement):
+        res = super(Procurement, self)._prepare_purchase_request(procurement)
         if procurement.location_id.operating_unit_id:
             res.update({
                 'operating_unit_id':
@@ -34,17 +39,11 @@ class Procurement(orm.Model):
             })
         return res
 
-    def _check_purchase_request_operating_unit(self, cr, uid, ids,
-                                               context=None):
-        for pr in self.browse(cr, uid, ids, context=context):
-            if pr.request_id and pr.location_id.operating_unit_id and \
-                            pr.request_id.operating_unit_id != \
-                            pr.location_id.operating_unit_id:
-                return False
-        return True
-
-    _constraints = [
-        (_check_purchase_request_operating_unit,
-         'The Purchase Request and the Procurement Order must '
-         'belong to the same Operating Unit.', ['operating_unit_id',
-                                                'purchase_id'])]
+    @api.one
+    @api.constrains('operating_unit_id', 'purchase_id')
+    def _check_purchase_request_operating_unit(self):
+        if self.request_id and self.location_id.operating_unit_id and \
+                        self.request_id.operating_unit_id != \
+                        self.location_id.operating_unit_id:
+            raise Warning(_('The Purchase Request and the Procurement Order '
+                            'must belong to the same Operating Unit.'))
