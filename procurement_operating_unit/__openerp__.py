@@ -14,7 +14,7 @@
     "website": "http://www.eficent.com",
     "category": "Stock Management",
     "license": "AGPL-3",
-    "depends": ["procurement", "operating_unit", "stock_operating_unit"],
+    "depends": ["procurement", "operating_unit"],
     "data": [
         "security/procurement_security.xml",
     ],
