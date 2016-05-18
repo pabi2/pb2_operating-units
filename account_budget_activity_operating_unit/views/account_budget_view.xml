@@ -8,7 +8,7 @@
             <field name="model">account.budget</field>
             <field name="inherit_id" ref="account_budget_activity.account_budget_view_form"/>
             <field name="arch" type="xml">
-                <field name="code" position="after">
+                <field name="fiscalyear_id" position="before">
                     <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"/>
                 </field>
             </field>
