@@ -135,33 +135,36 @@ class AccountVoucher(models.Model):
     def writeoff_move_line_get(self, voucher_id,
                                line_total, move_id, name,
                                company_currency, current_currency):
-        res = super(AccountVoucher, self).writeoff_move_line_get(
+        result = super(AccountVoucher, self).writeoff_move_line_get(
             voucher_id, line_total, move_id, name, company_currency,
             current_currency)
-        if res:
-            voucher = self.env['account.voucher'].browse(voucher_id)
-            if (voucher.payment_option == 'with_writeoff' or
-                    voucher.partner_id):
-                if not voucher.writeoff_operating_unit_id:
-                    raise Warning(_('Please indicate a write-off Operating '
-                                    'Unit.'))
-                else:
-                    res['operating_unit_id'] = \
-                        voucher.writeoff_operating_unit_id.id
-            else:
-                if not voucher.writeoff_operating_unit_id:
-                    if not voucher.account_id.operating_unit_id:
-                        raise Warning(_('Please indicate a write-off '
-                                        'Operating Unit or a default '
-                                        'Operating Unit for account %s') %
-                                      voucher.account_id.code)
+        if result:
+            if isinstance(result, dict):
+                result = [result]
+            for res in result:
+                voucher = self.env['account.voucher'].browse(voucher_id)
+                if (voucher.payment_option == 'with_writeoff' or
+                        voucher.partner_id):
+                    if not voucher.writeoff_operating_unit_id:
+                        raise Warning(_('Please indicate a write-off Operating'
+                                        'Unit.'))
                     else:
                         res['operating_unit_id'] = \
-                            voucher.account_id.operating_unit_id.id
-                else:
-                        res['operating_unit_id'] = \
                             voucher.writeoff_operating_unit_id.id
-        return res
+                else:
+                    if not voucher.writeoff_operating_unit_id:
+                        if not voucher.account_id.operating_unit_id:
+                            raise Warning(_('Please indicate a write-off '
+                                            'Operating Unit or a default '
+                                            'Operating Unit for account %s') %
+                                          voucher.account_id.code)
+                        else:
+                            res['operating_unit_id'] = \
+                                voucher.account_id.operating_unit_id.id
+                    else:
+                            res['operating_unit_id'] = \
+                                voucher.writeoff_operating_unit_id.id
+        return result
 
 
 class AccountVoucherLine(models.Model):
