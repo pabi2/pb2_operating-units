@@ -21,6 +21,18 @@
                 <field name="employee_id" position="after">
                     <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"/>
                 </field>
+                <xpath expr="/form/sheet/notebook/page/group/group/field[@name='picking_type_id']" position="before">
+                	<field name="operating_unit_borrow_view_id" attrs="{'invisible': [('type', '!=', 'borrow')], 'required': [('type', '=', 'borrow')]}" />
+                	<field name="operating_unit_borrow_id" invisible="1"/>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/group//field[@name='location_borrow_id']" position="attributes">
+					<attribute name="attrs">{}</attribute>
+					<attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/group//field[@name='location_borrow_id']" position="before">
+                	<field name="location_borrow_view_id" attrs="{'invisible': [('type', '!=', 'borrow')], 'required': [('type', '=', 'borrow')]}"/>
+                </xpath>
+                
             </field>
         </record>
 

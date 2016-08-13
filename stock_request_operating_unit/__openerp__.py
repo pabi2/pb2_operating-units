@@ -6,7 +6,9 @@
     "license": 'AGPL-3',
     "author": "Kitti U.",
     "category": "Warehouse",
-    "depends": ["stock_request", "operating_unit"],
+    "depends": ["stock_request",
+                "operating_unit",
+                "stock_operating_unit"],
     "description": """
 Stock Request Operating Unit
 =========================

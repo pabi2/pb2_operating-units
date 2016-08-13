@@ -5,3 +5,4 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 from . import operating_unit
 from . import res_users
+from . import operating_unit_view  # Added for PABI2
