@@ -15,6 +15,7 @@
     "website": "http://www.eficent.com",
     "depends": ["stock", "account_operating_unit"],
     "data": [
+        "security/ir.model.access.csv",
         "security/stock_security.xml",
         "data/stock_data.xml",
         "view/stock.xml",
