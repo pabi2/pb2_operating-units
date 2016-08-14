@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from openerp import models, fields, api
-from oerplib.service.osv.fields import One2ManyField
 
 
 class StockRequest(models.Model):
@@ -32,6 +31,7 @@ class StockRequest(models.Model):
         states={'draft': [('readonly', False)]},
         ondelete='restrict',
         domain="[('usage', '=', 'internal'),"
+        "('for_stock_request', '=', True),"
         "('operating_unit_id', '=', operating_unit_borrow_id)]",
     )
     location_borrow_id = fields.Many2one(
