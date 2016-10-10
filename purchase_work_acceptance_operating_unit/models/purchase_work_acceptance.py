@@ -30,6 +30,7 @@ class PurchaseWorkAcceptance(models.Model):
         string='Operating Unit',
         default=lambda self: self.env['res.users'].
         operating_unit_default_get(self._uid),
+        required=True,
     )
 
     # @api.model
