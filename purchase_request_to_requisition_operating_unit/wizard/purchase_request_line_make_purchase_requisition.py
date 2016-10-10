@@ -26,7 +26,8 @@ class PurchaseRequestLineMakePurchaseRequisition(models.TransientModel):
         for line in request_line_obj.browse(request_line_ids):
             line_operating_unit_id = line.request_id.operating_unit_id \
                 and line.request_id.operating_unit_id.id or False
-            operating_unit_id = line_operating_unit_id
+            user = self.env['res.users'].browse(self._uid)
+            res['operating_unit_id'] = user.default_operating_unit_id
             break
             # if operating_unit_id is not False \
             #         and line_operating_unit_id != operating_unit_id:
@@ -36,7 +37,7 @@ class PurchaseRequestLineMakePurchaseRequisition(models.TransientModel):
             #           'from the same operating unit.'))
             # else:
             #     operating_unit_id = line_operating_unit_id
-        res['operating_unit_id'] = operating_unit_id
+        # res['operating_unit_id'] = operating_unit_id
 
         return res
 
