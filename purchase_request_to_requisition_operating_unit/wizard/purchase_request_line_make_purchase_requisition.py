@@ -26,17 +26,17 @@ class PurchaseRequestLineMakePurchaseRequisition(models.TransientModel):
         for line in request_line_obj.browse(request_line_ids):
             line_operating_unit_id = line.request_id.operating_unit_id \
                 and line.request_id.operating_unit_id.id or False
-            if operating_unit_id is not False \
-                    and line_operating_unit_id != operating_unit_id:
-                raise except_orm(
-                    _('Could not process !'),
-                    _('You have to select lines '
-                      'from the same operating unit.'))
-            else:
-                operating_unit_id = line_operating_unit_id
+            operating_unit_id = line_operating_unit_id
+            break
+            # if operating_unit_id is not False \
+            #         and line_operating_unit_id != operating_unit_id:
+            #     raise except_orm(
+            #         _('Could not process !'),
+            #         _('You have to select lines '
+            #           'from the same operating unit.'))
+            # else:
+            #     operating_unit_id = line_operating_unit_id
         res['operating_unit_id'] = operating_unit_id
-
-        return res
 
     @api.model
     def _prepare_purchase_requisition(self, picking_type_id,
