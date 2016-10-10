@@ -38,6 +38,8 @@ class PurchaseRequestLineMakePurchaseRequisition(models.TransientModel):
             #     operating_unit_id = line_operating_unit_id
         res['operating_unit_id'] = operating_unit_id
 
+        return res
+
     @api.model
     def _prepare_purchase_requisition(self, picking_type_id,
                                       company_id):
