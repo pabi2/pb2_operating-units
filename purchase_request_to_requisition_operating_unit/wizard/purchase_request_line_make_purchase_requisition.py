@@ -22,11 +22,14 @@ class PurchaseRequestLineMakePurchaseRequisition(models.TransientModel):
             default_get(fields)
         request_line_obj = self.env['purchase.request.line']
         request_line_ids = self._context.get('active_ids', [])
+        is_central = self._context.get('is_central', False)
         operating_unit_id = False
         for line in request_line_obj.browse(request_line_ids):
             line_operating_unit_id = line.request_id.operating_unit_id \
                 and line.request_id.operating_unit_id.id or False
-            if operating_unit_id is not False \
+            if is_central:
+                operating_unit_id = is_central
+            elif operating_unit_id is not False \
                     and line_operating_unit_id != operating_unit_id:
                 raise except_orm(
                     _('Could not process !'),
