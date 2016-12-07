@@ -104,7 +104,7 @@ class AccountVoucher(models.Model):
     @api.model
     def _voucher_move_line_prepare(self, voucher_id, line_total,
                                    move_id, company_currency, current_currency,
-                                   voucher_line_id, ):
+                                   voucher_line_id):
         res = super(AccountVoucher, self)._voucher_move_line_prepare(
             voucher_id, line_total, move_id, company_currency,
             current_currency, voucher_line_id)
@@ -122,8 +122,8 @@ class AccountVoucher(models.Model):
             self, voucher_id, line_total, move_id,
             company_currency, current_currency, voucher_line_id,
             foreign_currency_diff):
-
-        res = super(AccountVoucher, self)._voucher_move_line_prepare(
+        res = super(AccountVoucher, self).\
+            _voucher_move_line_foreign_currency_prepare(
             voucher_id, line_total, move_id, company_currency,
             current_currency, voucher_line_id, foreign_currency_diff)
         line = self.env['account.voucher.line'].browse(voucher_line_id)
