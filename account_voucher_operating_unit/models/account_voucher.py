@@ -110,7 +110,7 @@ class AccountVoucher(models.Model):
             current_currency, voucher_line_id)
         line = self.env['account.voucher.line'].browse(voucher_line_id)
 
-        if line.voucher_id.type in ('sale', 'purchase') \
+        if line.voucher_id.type in ('payment', 'receipt') \
                 and line.voucher_id.operating_unit_id:
             res['operating_unit_id'] = line.voucher_id.operating_unit_id.id
         elif line.move_line_id and line.move_line_id.operating_unit_id:
