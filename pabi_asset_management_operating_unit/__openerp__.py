@@ -12,10 +12,13 @@
 Adds a the operating unit to
 
 - Asset Request
+- Asset Change Owner
     """,
     "data": [
         "views/asset_request_view.xml",
-        "security/asset_request_security.xml"
+        "views/asset_changeowner_view.xml",
+        "security/asset_request_security.xml",
+        "security/asset_changeowner_security.xml",
     ],
     'demo': [],
     'test': [
