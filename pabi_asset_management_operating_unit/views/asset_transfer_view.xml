@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_asset_transfer_form" model="ir.ui.view">
+            <field name="name">view.account.asset.transfer.form</field>
+            <field name="model">account.asset.transfer</field>
+            <field name="inherit_id" ref="pabi_asset_management.view_account_asset_transfer_form"/>
+            <field name="arch" type="xml">
+                <field name="user_id" position="before">
+                    <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_asset_transfer_tree" model="ir.ui.view">
+            <field name="name">view.account.asset.transfer.tree</field>
+            <field name="model">account.asset.transfer</field>
+            <field name="inherit_id" ref="pabi_asset_management.view_account_asset_transfer_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="before">
+                    <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_asset_transfer_search" model="ir.ui.view">
+            <field name="name">view.account.asset.transfer.search</field>
+            <field name="model">account.asset.transfer</field>
+            <field name="inherit_id" ref="pabi_asset_management.view_account_asset_transfer_search"/>
+            <field name="arch" type="xml">
+                <group position="inside">
+                    <filter string="Operating Unit" domain="" context="{'group_by':'operating_unit_id'}"/>
+                </group>
+            </field>
+        </record>
+
+    </data>
+</openerp>

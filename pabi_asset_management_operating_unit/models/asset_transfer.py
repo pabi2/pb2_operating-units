@@ -2,8 +2,8 @@
 from openerp import models, fields, api
 
 
-class AccountAssetRequest(models.Model):
-    _inherit = 'account.asset.request'
+class AccountAssetTransfer(models.Model):
+    _inherit = 'account.asset.transfer'
 
     operating_unit_id = fields.Many2one(
         'operating.unit',
