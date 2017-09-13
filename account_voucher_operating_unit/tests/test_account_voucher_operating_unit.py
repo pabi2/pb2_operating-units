@@ -16,7 +16,7 @@ class TestAccountVoucherOperatingUnit(common.TransactionCase):
     #    user_all that have access to both OU, will get 2 line.
     #    user_b2c that have access to B2C will get 1 line.
     # Use user_1 to make payment
-    # Check journal enteries
+    # Check journal entries
 
     def setUp(self):
         super(TestAccountVoucherOperatingUnit, self).setUp()
