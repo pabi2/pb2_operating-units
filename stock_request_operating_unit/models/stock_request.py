@@ -63,9 +63,12 @@ class StockRequest(models.Model):
 
     @api.onchange('operating_unit_id')
     def _onchange_operating_unit_id(self):
+        ou_id = self.operating_unit_id.id
         types = self.env['stock.picking.type'].search(
-            [('code', '=', 'internal'), ('warehouse_id.operating_unit_id',
-                                         '=', self.operating_unit_id.id)])
+            [('code', '=', 'internal'),
+             ('warehouse_id.operating_unit_id', '=', ou_id),
+             ('default_location_src_id.for_stock_request', '=', True)])
+        # Only type with source location to be used for SR
         self.picking_type_id = types and types[0] or False
-        res = {'domain': {'picking_type_id': [('id', 'in', types._ids)]}}
+        res = {'domain': {'picking_type_id': [('id', 'in', (types.ids))]}}
         return res
