@@ -19,7 +19,8 @@
             <field name="inherit_id" ref="pabi_purchase_billing.view_purchase_billing_form"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
-                    <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"/>
+                    <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
+                      attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                 </field>
             </field>
         </record>

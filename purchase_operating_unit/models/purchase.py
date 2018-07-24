@@ -103,9 +103,12 @@ class PurchaseOrder(models.Model):
         for po in self:
             for invoice in po.invoice_ids:
                 if invoice.operating_unit_id != po.operating_unit_id:
-                    raise Warning(_('The operating unit of the purchase order '
-                                    'must be the same as in the '
-                                    'associated invoices.'))
+                    # kittiu: automate the change of operating unit
+                    invoice.operating_unit_id = po.operating_unit_id
+                    # raise Warning(_('The operating unit of the purchase order
+                    #                 'must be the same as in the '
+                    #                 'associated invoices.'))
+                    # --
 
 
 class PurchaseOrderLine(models.Model):
@@ -115,14 +118,16 @@ class PurchaseOrderLine(models.Model):
                                         related='order_id.operating_unit_id',
                                         string='Operating Unit', readonly=True)
 
-    @api.one
-    @api.constrains('invoice_lines')
-    def _check_invoice_ou(self):
-        for line in self:
-            for inv_line in line.invoice_lines:
-                if inv_line.invoice_id and \
-                    inv_line.invoice_id.operating_unit_id != \
-                        line.operating_unit_id:
-                    raise Warning(_('The operating unit of the purchase order '
-                                    'must be the same as in the '
-                                    'associated invoices.'))
+    # kittiu: no check as above
+    # @api.one
+    # @api.constrains('invoice_lines')
+    # def _check_invoice_ou(self):
+    #     for line in self:
+    #         for inv_line in line.invoice_lines:
+    #             if inv_line.invoice_id and \
+    #                 inv_line.invoice_id.operating_unit_id != \
+    #                     line.operating_unit_id:
+    #                 raise Warning(_('The operating unit of the purchase order
+    #                                 'must be the same as in the '
+    #                                 'associated invoices.'))
+    # --
